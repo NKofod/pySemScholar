@@ -945,6 +945,21 @@ def paper_recommender_multi(positivePaperIds: list = [],
                         fields: str = 'Basic',
                         custom_fields: list = None, 
                         api_key: str = None) -> list[dict]:
+
+    """
+    Provides a wrapper for the Semantic Scholar Recommendations API's paper recommendations endpoint. 
+
+    Inputs: 
+    positivePaperIds: A list containing positive paper ids 
+    negativePaperIds: A list containing negative paper ids 
+    limit: An int containing the number of results per call to the API's endpoint. 
+    fields: One of either 'Basic', 'Extended', 'All' or 'Custom'. Basic contains 'paperId', 'title', 'abstract', 'year', 'journal' and 'authors'. Extended contains all of the above, as well as 'externalIds', 'url', 'referenceCount' and 'citationCount'. All contains all possible fields. Custom allows for the use of the custom_fields parameter to specify a custom list of fields to be included in the output. 
+    custom_fields: A list of strings containing the names of fields to be included. For a full list of fields, see https://api.semanticscholar.org/api-docs/graph. 
+    api_key: A string containing an api_key for the Semantic Scholar API 4
+    
+    Outputs: 
+    A list of dictionaries containing the results. 
+    """
     # Check for input integrity 
     if not isinstance(positivePaperIds,list):
         raise TypeError('positivePaperIds parameter must be of type list.')
@@ -1001,7 +1016,19 @@ def paper_recommender_single(paperId:str,
                             fields: str = 'Basic',
                             custom_fields: list = None, 
                             api_key: str = None) -> list[dict]: 
-        
+    """
+    Provides a wrapper for the Semantic Scholar Recommendations API's paper recommendations endpoint. 
+
+    Inputs: 
+    paperId: A string containing the paper id 
+    limit: An int containing the number of results per call to the API's endpoint. 
+    fields: One of either 'Basic', 'Extended', 'All' or 'Custom'. Basic contains 'paperId', 'title', 'abstract', 'year', 'journal' and 'authors'. Extended contains all of the above, as well as 'externalIds', 'url', 'referenceCount' and 'citationCount'. All contains all possible fields. Custom allows for the use of the custom_fields parameter to specify a custom list of fields to be included in the output. 
+    custom_fields: A list of strings containing the names of fields to be included. For a full list of fields, see https://api.semanticscholar.org/api-docs/graph. 
+    api_key: A string containing an api_key for the Semantic Scholar API 4
+    
+    Outputs: 
+    A list of dictionaries containing the results. 
+    """
     # Check for input integrity 
     if not isinstance(paperId,str):
         raise TypeError('paperId parameter must be of type str')
@@ -1046,7 +1073,15 @@ def paper_recommender_single(paperId:str,
     return request_json['recommendedPapers']
 
 def dataset_releases(api_key:str = None ) -> list[str]:
+    """ 
+    Provides a wrapper for the Semantic Scholar Datasets API Releases endpoint 
 
+    Input: 
+    api_key: A string containing a key for the Semantic Scholar API 
+
+    Output: 
+    A list of strings containing release names 
+    """
     # Construct the query  
     query = DATASETS_API_REF + "release/"
 
@@ -1067,6 +1102,16 @@ def dataset_releases(api_key:str = None ) -> list[str]:
 
 def datasetsInRelease(release_id:str=None,
                         api_key:str = None) -> dict: 
+    """ 
+    Provides a wrapper for the Semantic Scholar Datasets API Datasets in Release endpoint 
+
+    Input: 
+    release_id: A string containing the release id. 
+    api_key: A string containing a key for the Semantic Scholar API 
+
+    Output: 
+    A dictionary containing the response from the endpoint. See https://api.semanticscholar.org/api-docs/datasets#operation/get_release for details. 
+    """
 
     # Construct the query 
     query = DATASETS_API_REF + "release/" + release_id 
@@ -1091,7 +1136,17 @@ def datasetsInRelease(release_id:str=None,
 def datasetLinks(dataset_name: str = None,
                 release_id: str = None, 
                 api_key: str = None) -> dict: 
+    """ 
+    Provides a wrapper for the Semantic Scholar Datasets API Links for Dataset endpoint 
 
+    Input: 
+    dataset_name: A string containing the name of the dataset 
+    release_id: A string containing the release id. 
+    api_key: A string containing a key for the Semantic Scholar API 
+
+    Output: 
+    A dictionary containing the response from the endpoint. See https://api.semanticscholar.org/api-docs/datasets#operation/get_release for details. 
+    """
     # Construct the query 
     query = DATASETS_API_REF + "release/" + release_id + "/dataset/" + dataset_name
     
