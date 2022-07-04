@@ -1,6 +1,4 @@
 
-
-from operator import pos
 import requests 
 import json 
 
@@ -150,6 +148,143 @@ PAPER_CITATION_EXTENDED = (
 def assemble_query_fields(fields:str='Basic', 
                     custom_fields:list = False,
                     search_type:str = False):
+
+    AUTHOR_FIELDS = (
+    'authorId',
+    'externalIds',
+    'url',
+    'name',
+    'aliases',
+    'affiliations',
+    'homepage',
+    'paperCount',
+    'citationCount',
+    'hIndex',
+    'papers',
+    'papers.paperId',
+    'papers.externalIds',
+    'papers.url',
+    'papers.title',
+    'papers.abstract',
+    'papers.venue',
+    'papers.year',
+    'papers.referenceCount',
+    'papers.citationCount',
+    'papers.influentialCitationCount',
+    'papers.isOpenAccess',
+    'papers.fieldsOfStudy',
+    'papers.s2FieldsOfStudy',
+    'papers.journal',
+    'papers.authors'
+    )
+
+    AUTHOR_FIELDS_BASIC = (
+        'authorId',
+        'name',
+        'affiliations',
+        'url'
+    )
+
+    AUTHOR_FIELDS_EXTENDED = (
+        'authorId',
+        'name',
+        'affiliations',
+        'homepage',
+        'url',
+        'aliases',
+        'hIndex'
+    )
+
+
+
+    PAPER_FIELDS = (
+        'paperId',
+        'externalIds',
+        'url',
+        'title',
+        'abstract',
+        'venue',
+        'year',
+        'referenceCount',
+        'citationCount',
+        'influentialCitationCount',
+        'isOpenAccess',
+        'fieldsOfStudy',
+        's2FieldsOfStudy',
+        'publicationType',
+        'publicationDate',
+        'journal',
+        'authors'
+    )
+
+    PAPER_FIELDS_BASIC = (
+        'paperId',
+        'title',
+        'abstract',
+        'publicationDate',
+        'journal',
+        'authors'
+    )
+
+    PAPER_FIELDS_EXTENDED = (
+        'paperId',
+        'externalIds',
+        'url',
+        'title',
+        'abstract',
+        'venue',
+        'year',
+        'publicationType',
+        'publicationDate',
+        'journal',
+        'authors'
+    )
+
+    PAPER_CITATION_FIELDS = (
+        'contexts',
+        'intents',
+        'isInfluential',
+        'paperId',
+        'corpusId',
+        'externalIds',
+        'url',
+        'title',
+        'abstract',
+        'venue',
+        'year',
+        'referenceCount',
+        'citationCount',
+        'influentialCitationCount',
+        'isOpenAccess',
+        'fieldsOfStudy',
+        's2FieldsOfStudy',
+        'publicationTypes',
+        'publicationDate',
+        'journal',
+        'authors'
+    )
+
+    PAPER_CITATION_BASIC = (
+        'paperId',
+        'title',
+        'abstract',
+        'year',
+        'journal',
+        'authors'
+    )
+
+    PAPER_CITATION_EXTENDED = (
+        'paperId',
+        'title',
+        'abstract',
+        'year',
+        'journal',
+        'externalIds',
+        'url',
+        'referenceCount',
+        'citationCount'
+    )
+    
     if search_type == "Author": 
         # Check which field configuration has been specified, if any. 
         # Then create a string of the appropriate fields, joined 
@@ -222,16 +357,16 @@ def author_search(name:str ="",
     """
     Provides a wrapper for the Semantic Scholar Graph API's author search endpoint. 
 
-    Inputs: 
-    name: A string containing the name being searched for 
-    limit: An int containing the number of results per call to the API's endpoint. 
-    offset: An int containing the number of results to skip. 
-    fields: One of either 'Basic', 'Extended', 'All' or 'Custom'. Basic contains 'authorId', 'name', 'affiliations' and 'url'. Extended contains all of the above as well as 'homepage', 'hIndex' and 'aliases'. All contains all possible fields. Custom allows for the use of the custom_fields parameter to specify a custom list of fields to be included in the output. 
-    custom_fields: A list of strings containing the names of fields to be included. For a full list of fields, see https://api.semanticscholar.org/api-docs/graph. 
-    paginate: A boolean describing whether to get more than the first page of results.  
-    api_key: A string containing an api_key for the Semantic Scholar API 4
+    Inputs: \n
+    name: A string containing the name being searched for \n
+    limit: An int containing the number of results per call to the API's endpoint. \n
+    offset: An int containing the number of results to skip. \n
+    fields: One of either 'Basic', 'Extended', 'All' or 'Custom'. Basic contains 'authorId', 'name', 'affiliations' and 'url'. Extended contains all of the above as well as 'homepage', 'hIndex' and 'aliases'. All contains all possible fields. Custom allows for the use of the custom_fields parameter to specify a custom list of fields to be included in the output. \n
+    custom_fields: A list of strings containing the names of fields to be included. For a full list of fields, see https://api.semanticscholar.org/api-docs/graph. \n
+    paginate: A boolean describing whether to get more than the first page of results.  \n
+    api_key: A string containing an api_key for the Semantic Scholar API  \n
 
-    Outputs: 
+    Outputs: \n
     A list of dictionaries containing the results. 
     """
     # Check for input integrity 
@@ -334,7 +469,7 @@ def author_details(author_id:str ="",
     api_key: A string containing an api_key for the Semantic Scholar API 
 
     Outputs: 
-    A list of dictionaries containing the results. 
+    A dictionary containing the results. 
     """
     # Check for input integrity 
     if fields not in ['Basic', 'Extended','All','Custom']: 
@@ -587,7 +722,19 @@ def paper_lookup(paper_id:str ="",
                     fields: str ='Basic',
                     custom_fields: list =False,
                     api_key: str =False) -> dict: 
-    
+    """
+    Provides a wrapper for the Semantic Scholar Graph API's paper details endpoint. 
+
+    Inputs: 
+    paper_id: A string containing the paper_id  
+    fields: One of either 'Basic', 'Extended', 'All' or 'Custom'. Basic contains 'authorId', 'name', 'affiliations' and 'url'. Extended contains all of the above as well as 'homepage', 'hIndex' and 'aliases'. All contains all possible fields. Custom allows for the use of the custom_fields parameter to specify a custom list of fields to be included in the output. 
+    custom_fields: A list of strings containing the names of fields to be included. For a full list of fields, see https://api.semanticscholar.org/api-docs/graph. 
+    api_key: A string containing an api_key for the Semantic Scholar API 
+
+    Outputs: 
+    A dictionary containing the results. 
+    """
+
     # Check for input integrity 
     if fields not in ['Basic', 'Extended','All','Custom']: 
         raise ValueError('"fields" parameter must be either "Basic", "Extended", "All" or "Custom"')
