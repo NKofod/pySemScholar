@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build" 
+
+[project]
+name = "pySemScholar"
+version = "0.1"
+authors = [
+    {name = "Nicolai J. Kofod-Jensen", email = "nkof@itu.dk"},
+]
+description = "A wrapper for the Semantic Scholar API" 
+readme = "README.md" 
+license = {file = "LICENSE"}
+requires-python = ">= 3.10" 
+classifiers = [
+    "Programming Language :: Python :: 3", 
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent", 
+]
