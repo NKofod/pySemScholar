@@ -26,11 +26,12 @@ def datasetReleases(api_key:str = None ) -> list[str]:
     # Check status code and create output 
     if request.status_code == 200: 
         request_content = request.content 
+        request_json = json.loads(request_content)
     else: 
         request_content = request.content 
         request_json = json.loads(str(request_content))
         raise ConnectionError(f"{request_json['error']}")
-    return request_content 
+    return request_json 
 
 def datasetsInRelease(release_id:str=None,
                         api_key:str = None) -> dict: 
@@ -57,7 +58,7 @@ def datasetsInRelease(release_id:str=None,
     # Check status code and create output 
     if request.status_code == 200: 
         request_content = request.content 
-        request_json = json.loads(str(request_content))
+        request_json = json.loads(request_content)
     else: 
         request_content = request.content 
         request_json = json.loads(str(request_content))

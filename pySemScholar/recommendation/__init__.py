@@ -2,15 +2,57 @@ import requests
 import json 
 from pySemScholar.utils import assemble_query_fields
 
-RECOMMENDER_API_REF = "https://api.semanticscholar.org/recommender/v1/"
+RECOMMENDER_API_REF = "https://api.semanticscholar.org/recommendations/v1/"
 
+PAPER_FIELDS = (
+        'paperId',
+        'externalIds',
+        'url',
+        'title',
+        'abstract',
+        'venue',
+        'year',
+        'referenceCount',
+        'citationCount',
+        'influentialCitationCount',
+        'isOpenAccess',
+        'fieldsOfStudy',
+        's2FieldsOfStudy',
+        'publicationTypes',
+        'publicationDate',
+        'journal',
+        'authors'
+    )
+
+PAPER_FIELDS_BASIC = (
+        'paperId',
+        'title',
+        'abstract',
+        'publicationDate',
+        'journal',
+        'authors'
+    )
+
+PAPER_FIELDS_EXTENDED = (
+        'paperId',
+        'externalIds',
+        'url',
+        'title',
+        'abstract',
+        'venue',
+        'year',
+        'publicationTypes',
+        'publicationDate',
+        'journal',
+        'authors'
+    )
 
 def paperRecommenderMulti(positivePaperIds: list = [], 
                         negativePaperIds: list = [], 
                         limit: int = 100,
                         fields: str = 'Basic',
-                        custom_fields: list = None, 
-                        api_key: str = None) -> list[dict]:
+                        custom_fields: list = False, 
+                        api_key: str = False) -> list[dict]:
 
     """
     Provides a wrapper for the Semantic Scholar Recommendations API's paper recommendations endpoint. 
@@ -47,13 +89,28 @@ def paperRecommenderMulti(positivePaperIds: list = [],
     }
 
     # Construct base query for the endpoint
-    base_query = 'papers/'
-
+    base_query = 'papers/?'
+    # if fields == 'Basic': 
+    #     payload['fields'] = list(PAPER_FIELDS_BASIC)
+    # elif fields == 'Extended': 
+    #     payload['fields'] = list(PAPER_FIELDS_EXTENDED)
+    # elif fields == 'All': 
+    #     payload['fields'] = list(PAPER_FIELDS)
+    # elif fields == "Custom":
+    #     tmp_fields = [] 
+    #     # Check each fields in the custom_fields list against the 
+    #     # list of valid fields. If a field is not included in the list
+    #     # of valid fields, raise a ValueError. 
+    #     for field in custom_fields: 
+    #         if field not in PAPER_FIELDS: 
+    #             raise ValueError(f'{field} is not a valid field to include in custom fields.')
+    #         tmp_fields.append(field)
+    #     payload['fields'] = tmp_fields
     # Assemble query fields to a string for use in request 
     query_fields = assemble_query_fields(fields,custom_fields,'Paper')
     
     # Construct the final query 
-    final_query = RECOMMENDER_API_REF + base_query + query_fields 
+    final_query = RECOMMENDER_API_REF + base_query + "fields=" +query_fields 
     
     # Add limit to the query if limit is not equal to 100
     if limit != 100:
@@ -61,18 +118,19 @@ def paperRecommenderMulti(positivePaperIds: list = [],
     
     # Make the request to the endpoint 
     if api_key: 
-        request = requests.post(final_query, data = payload, headers={'x-api-key':api_key})
+        request = requests.post(final_query, json = payload, headers={'x-api-key':api_key})
     else: 
-        request = requests.post(final_query, data = payload)
+        request = requests.post(final_query, json = payload)
     
     # Check status code on the request and generate output 
     if request.status_code == 200: 
         request_content = request.content 
-        request_json = json.loads(str(request_content))
+        request_json = json.loads(request_content)
     else: 
+        print(request.status_code)
         request_content = request.content 
-        request_json = json.loads(str(request_content))
-        raise ConnectionError(f"{request_json['error']}")
+        request_json = json.loads(request_content)
+        raise ConnectionError(f"{request_json}")
 
     return request_json['recommendedPapers']
 
@@ -80,8 +138,8 @@ def paperRecommenderMulti(positivePaperIds: list = [],
 def paperRecommenderSingle(paperId:str, 
                             limit: int = 100,
                             fields: str = 'Basic',
-                            custom_fields: list = None, 
-                            api_key: str = None) -> list[dict]: 
+                            custom_fields: list = False, 
+                            api_key: str = False) -> list[dict]: 
     """
     Provides a wrapper for the Semantic Scholar Recommendations API's paper recommendations endpoint. 
 
@@ -115,7 +173,7 @@ def paperRecommenderSingle(paperId:str,
     query_fields = assemble_query_fields(fields,custom_fields,'Paper')
 
     # Construct the final query 
-    final_query = RECOMMENDER_API_REF + base_query + query_fields 
+    final_query = RECOMMENDER_API_REF + base_query  + "fields=" + query_fields 
 
     # Add limit to the query if limit is not equal to 100, as 
     # 100 is the standard for the endpoint in question. 
@@ -131,9 +189,9 @@ def paperRecommenderSingle(paperId:str,
     # Check status code on the request and generate output 
     if request.status_code == 200: 
         request_content = request.content 
-        request_json = json.loads(str(request_content))
+        request_json = json.loads(request_content)
     else: 
         request_content = request.content 
-        request_json = json.loads(str(request_content))
+        request_json = json.loads(request_content)
         raise ConnectionError(f"{request_json['error']}")
     return request_json['recommendedPapers']

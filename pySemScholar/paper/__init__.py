@@ -150,7 +150,7 @@ def paperDetails(paper_id:str ="",
 
     # Construct base query for the endpoint with the 
     # given paper ID 
-    base_query = f'author/{paper_id}?'
+    base_query = f'paper/{paper_id}?'
 
     # Assemble query fields to a string for use in request 
     query_fields = assemble_query_fields(fields,custom_fields,'Paper')
