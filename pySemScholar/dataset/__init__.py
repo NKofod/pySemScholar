@@ -91,7 +91,7 @@ def datasetLinks(dataset_name: str = None,
     # Check status code and create output 
     if request.status_code == 200: 
         request_content = request.content 
-        request_json = json.loads(str(request_content))
+        request_json = json.loads(request_content)
     else: 
         request_content = request.content 
         request_json = json.loads(str(request_content))
