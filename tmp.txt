@@ -1,0 +1,16 @@
+Paper abstract text, where available.
+100M records in 30 1.8GB files.
+The core attributes of an author (name, affiliation, paper count, etc.). Authors have an "authorId" field, which can be joined to the "authorId" field of the members of a paper's "authors" field.
+75M records in 30 100MB files.
+Instances where the bibliography of one paper (the "citingPaper") mentions another paper (the "citedPaper"), where both papers are identified by the "paperId" field. Citations have attributes of their own, (influential classification, intent classification, and citation context).
+2.4B records in 30 8.5GB files.
+A dense vector embedding representing the contents of the paper.
+120M records in 30 28GB files.
+Mapping from sha-based ID to paper corpus ID.
+450M records in 30 500MB files
+The core attributes of a paper (title, authors, date, etc.).
+200M records in 30 1.5GB files.
+Full-body paper text parsed from open-access PDFs. Identifies structural elements such as paragraphs, sections, and bibliography entries.
+35M records in 30 3GB files.
+A short natural-language summary of the contents of a paper.
+58M records in 30 200MB files.
