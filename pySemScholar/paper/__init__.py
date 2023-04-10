@@ -5,7 +5,7 @@ from pySemScholar.utils import assemble_query_fields
 GRAPH_API_REF = "https://api.semanticscholar.org/graph/v1/"
 
 def paperSearch(query:str ="",   
-                    limit: int=100,
+                    limit: int=10,
                     offset: int =0,
                     fields: str ='Basic',
                     custom_fields: list =False,
@@ -61,14 +61,13 @@ def paperSearch(query:str ="",
 
     # Add limit to the query if limit is not equal to 100, as 
     # 100 is the standard for the endpoint in question. 
-    if limit != 100:
+    if limit != 10:
         final_query += f"&limit={limit}"
-    
     # Add offset to the query, if offset is not equal to 0, as 
     # 0 is the standard for the endpoint in question. 
+    query_minus_offset = final_query
     if offset != 0: 
         final_query += f"&offset={offset}"
-
     # Fetch the data from the Semantic Scholar API 
     if api_key: 
         request = requests.get(final_query,headers={'x-api-key':api_key})
@@ -90,17 +89,15 @@ def paperSearch(query:str ="",
     # Extract the results from from the requestion into a list 
     results = list(request_json['data'])
     
-    next_offset = request_json['next']
+    next_offset = int(request_json['next'])
     past_offset = 0 
 
     # If paginate, then iterate over requests and generate output 
-    if paginate:
-        while request_json['next'] <= 10000 - limit and past_offset != next_offset: 
+    if paginate != False:
+        while next_offset <= (10000 - limit) and past_offset != next_offset: 
+            print(next_offset)
             past_offset = next_offset 
-            if offset != 0: 
-                query = final_query[:-len(str(offset))] + str(next_offset)
-            else: 
-                query = final_query + "&offset" + str(next_offset)
+            final_query = query_minus_offset + f"&offset={past_offset}"
             if api_key: 
                 request = requests.get(final_query,headers={'x-api-key':api_key})
             else: 
@@ -113,8 +110,10 @@ def paperSearch(query:str ="",
                 request_json = json.loads(request_content)
                 raise ConnectionError(f"{request_json['error']}")
             results.extend(request_json['data'])
-            print(request_json['next'])
-            next_offset = request_json['next']
+            try: 
+                next_offset = int(request_json['next'])
+            except KeyError:
+                pass 
 
     return results 
 
